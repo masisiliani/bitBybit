@@ -75,7 +75,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## Authors
 
 * **Marcela Sisiliani** - *Initial work* - [Má Sisiliani](https://github.com/masisiliani)
-* **Vitoria Rio** - *Initial work* - [Má Sisiliani](https://github.com/vitoriario)
+* **Vitoria Rio** - *Initial work* - [Vitoria Rio](https://github.com/vitoriario)
 
 See also the list of [contributors](https://github.com/masisiliani/bitbybit/contributors) who participated in this project.
 
