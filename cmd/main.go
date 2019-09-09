@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello bit.By.bit")
+	fmt.Println("Welcome to bit.By.bit")
 
 	err := sqlDb.Connect_SQL()
 
@@ -20,6 +20,6 @@ func main() {
 	userService := user.NewService(userRepo)
 
 	user, err := userService.Find(1)
-	fmt.Println(user.Login)
+	fmt.Printf("Hello %s!", user.Login)
 
 }
