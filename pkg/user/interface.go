@@ -1,23 +1,23 @@
 package user
 
-//Reader interface
+//Reader interface for user
 type Reader interface {
 	Find(username string) (*User, error)
 }
 
-//Writer bookmark writer
+//Writer user
 type Writer interface {
 	Insert(username, password string) error
 	ChangePassword(username, password string) error
 }
 
-//Repository repository interface
+//Repository interface
 type Repository interface {
 	Reader
 	Writer
 }
 
-//UseCase use case interface
+//UseCase service interface
 type UseCase interface {
 	Reader
 	Writer

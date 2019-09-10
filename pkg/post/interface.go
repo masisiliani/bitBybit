@@ -4,13 +4,13 @@ package post
 type Reader interface {
 	Find(ID int) (*Post, error)
 	FindByUser(username string) ([]*Post, error)
-	Search(query string) ([]*Post, error)
 }
 
 //Writer struct post
 type Writer interface {
 	Insert(post *Post) error
 	Update(post *Post) error
+	Delete(ID int) error
 }
 
 //Repository interface

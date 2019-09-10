@@ -6,25 +6,27 @@ import (
 	"strconv"
 )
 
-//SQLServerRepository mongodb repo
-type SQLServerRepository struct {
+//MySQLRepository MySql repo
+type MySQLRepository struct {
 	DB *sql.DB
 }
 
-//NewSqlServerRepository create new repository
-func NewSqlServerRepository(db *sql.DB) *SQLServerRepository {
-	return &SQLServerRepository{
+//NewMySQLRepository create new repository
+func NewMySQLRepository(db *sql.DB) *MySQLRepository {
+	return &MySQLRepository{
 		DB: db,
 	}
 }
 
-func (r *SQLServerRepository) FindPosts(username string) ([]Post, error) {
+//Find a post by id
+func (r *MySQLRepository) Find(ID int) ([]Post, error) {
 	rows, err := r.DB.Query(`SELECT
-							ID, 
-							Description, 
-							User
-						FROM Post 
-						WHERE User = ` + username)
+								ID,
+								Description,
+								User,
+								Date
+							FROM Post
+							WHERE ID = ` + strconv.Itoa(ID))
 
 	if err != nil {
 		fmt.Println(err)
@@ -40,12 +42,13 @@ func (r *SQLServerRepository) FindPosts(username string) ([]Post, error) {
 		err = rows.Scan(
 			&post.ID,
 			&post.Description,
-			&post.User,
+			&post.UserName,
+			&post.Date,
 		)
 
 		if err != nil {
 			fmt.Println(err)
-		}else{
+		} else {
 			posts = append(posts, post)
 		}
 
@@ -54,14 +57,15 @@ func (r *SQLServerRepository) FindPosts(username string) ([]Post, error) {
 	return posts, err
 }
 
-
-func (r *SQLServerRepository) FindPost(ID int) (Post, error) {
+//FindByUser select all posts by username
+func (r *MySQLRepository) FindByUser(username string) ([]Post, error) {
 	rows, err := r.DB.Query(`SELECT
-							ID, 
-							Description, 
-							User
-						FROM Post 
-						WHERE ID = ` + strconv.Itoa(int(ID)))
+								ID,
+								Description,
+								User,
+								Date
+							FROM Post
+							WHERE User = ` + username)
 
 	if err != nil {
 		fmt.Println(err)
@@ -69,6 +73,7 @@ func (r *SQLServerRepository) FindPost(ID int) (Post, error) {
 
 	defer rows.Close()
 
+	var posts []Post
 	var post Post
 
 	for rows.Next() {
@@ -76,36 +81,47 @@ func (r *SQLServerRepository) FindPost(ID int) (Post, error) {
 		err = rows.Scan(
 			&post.ID,
 			&post.Description,
-			&post.User,
+			&post.UserName,
+			&post.Date,
 		)
 
 		if err != nil {
 			fmt.Println(err)
+		} else {
+			posts = append(posts, post)
 		}
 
 	}
 
-	return post, err
+	return posts, err
 }
 
-
-func (r *SQLServerRepository) InsertPost(username string, description string) (error) {
-	rows, err := r.DB.Query(`INSERT INTO
-							Posts (Description, User)
+//Insert insert a new post
+func (r *MySQLRepository) Insert(post *Post) error {
+	result, err := r.DB.Exec(`INSERT INTO
+							Posts (Description, User, Date)
 							VALUES
-							(` + description + "," + username + ")")
+							(` + post.Description + "," + post.UserName + "," + post.Date + ")")
 
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	rows.Close()
-	return  nil
+
+	postID, err := result.LastInsertId()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	post.ID = int(postID)
+
+	return nil
 }
 
-
-func (r *SQLServerRepository) DeletePost(ID int) (error) {
-	rows, err := r.DB.Query(`DELETE FROM
+//Delete a post
+func (r *MySQLRepository) Delete(ID int) error {
+	_, err := r.DB.Exec(`DELETE FROM
 							Posts
 							VALUES
 							WHERE
@@ -115,22 +131,22 @@ func (r *SQLServerRepository) DeletePost(ID int) (error) {
 		fmt.Println(err)
 		return err
 	}
-	rows.Close()
-	return  nil
+
+	return nil
 }
 
-func (r *SQLServerRepository) UpdatePost(ID int, description string) (error) {
-	rows, err := r.DB.Query(`UPDATE
+//Update post
+func (r *MySQLRepository) Update(post *Post) error {
+	_, err := r.DB.Exec(`UPDATE
 							Posts
 							SET
-							Description = ` + description + 
-							` WHERE
-							ID = ` + strconv.Itoa(ID))
+							Description = ` + post.Description +
+		` WHERE
+							ID = ` + strconv.Itoa(post.ID))
 
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	rows.Close()
-	return  nil
+	return nil
 }
