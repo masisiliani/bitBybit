@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+    api:
+        container_name: bitbybit
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        networks:
+            - net
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: user
+            MYSQL_PASSWORD: pass
+            MYSQL_DATABASE: bitbybit
+        depends_on:
+            - mysqldb
+        external_links:
+            - mysqldb:mysqldb
+        restart: unless-stopped
+
+    mysqldb:
+        container_name: mysqldb
+        image: mysql:5.7
+        ports:
+          - "3307:3307"
+        volumes:
+            - db_data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: user
+            MYSQL_PASSWORD: pass
+            MYSQL_DATABASE: bitbybit
+        networks:
+            - net
+
+networks:
+    net:
+
+volumes:
+    db_data:

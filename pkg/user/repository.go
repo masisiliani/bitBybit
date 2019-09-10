@@ -20,8 +20,7 @@ func NewSqlServerRepository(db *sql.DB) *SQLServerRepository {
 
 func (r *SQLServerRepository) Find(ID int32) (User, error) {
 	rows, err := r.DB.Query(`SELECT 
-							ID, 
-							Login, 
+							User, 
 							Password
 						FROM Users 
 						WHERE ID = ` + strconv.Itoa(int(ID)))
@@ -37,7 +36,6 @@ func (r *SQLServerRepository) Find(ID int32) (User, error) {
 	for rows.Next() {
 
 		err = rows.Scan(
-			&user.ID,
 			&user.Login,
 			&user.Password,
 		)
@@ -47,7 +45,37 @@ func (r *SQLServerRepository) Find(ID int32) (User, error) {
 		}
 
 	}
-
 	return user, err
+}
 
+func (r *SQLServerRepository) InsertUser(username, password string) (error) {
+	rows, err := r.DB.Query(`INSERT INTO
+							Users (User, Password)
+							VALUES
+							(` + username + "," + password + ")")
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	rows.Close()
+	return  nil
+}
+
+
+func (r *SQLServerRepository) ChangePassword(username, password string) (error) {
+	rows, err := r.DB.Query(`UPDATE
+							Users
+							SET
+							Password = ` + password + 
+							` WHERE
+							User = ` + username)
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	rows.Close()
+	return  nil
 }
