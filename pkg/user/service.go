@@ -13,8 +13,8 @@ func NewService(r Repository) *Service {
 }
 
 //Find an user
-func (s *Service) Find(id int) (*User, error) {
-	return s.repo.Find(id)
+func (s *Service) Find(username string) (*User, error) {
+	return s.repo.Find(username)
 }
 
 //Insert a user

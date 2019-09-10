@@ -2,7 +2,7 @@ package user
 
 //Reader interface
 type Reader interface {
-	Find(id int) (*User, error)
+	Find(username string) (*User, error)
 }
 
 //Writer bookmark writer
