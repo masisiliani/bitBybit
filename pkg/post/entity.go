@@ -2,6 +2,7 @@ package post
 
 type Post struct {
 	ID          int
-	User        string
+	UserName    string
 	Description string
+	Data        string
 }
