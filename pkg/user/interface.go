@@ -7,7 +7,8 @@ type Reader interface {
 
 //Writer bookmark writer
 type Writer interface {
-	Store(b *User) (int, error)
+	Insert(username, password string) error
+	ChangePassword(username, password string) error
 }
 
 //Repository repository interface

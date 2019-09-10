@@ -1,6 +1,7 @@
 package user
 
+//User is a struct with user properties
 type User struct {
-	Login    string
+	UserName string
 	Password string
 }

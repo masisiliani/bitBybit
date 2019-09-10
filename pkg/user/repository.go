@@ -3,27 +3,27 @@ package user
 import (
 	"database/sql"
 	"fmt"
-	"strconv"
 )
 
-//SQLServerRepository mongodb repo
-type SQLServerRepository struct {
+//MySQLRepository MySql repo
+type MySQLRepository struct {
 	DB *sql.DB
 }
 
-//NewSqlServerRepository create new repository
-func NewSqlServerRepository(db *sql.DB) *SQLServerRepository {
-	return &SQLServerRepository{
+//NewMySQLRepository create new repository
+func NewMySQLRepository(db *sql.DB) *MySQLRepository {
+	return &MySQLRepository{
 		DB: db,
 	}
 }
 
-func (r *SQLServerRepository) Find(ID int32) (User, error) {
-	rows, err := r.DB.Query(`SELECT 
-							User, 
+//Find a user by username
+func (r *MySQLRepository) Find(username string) (User, error) {
+	rows, err := r.DB.Query(`SELECT
+							User,
 							Password
-						FROM Users 
-						WHERE ID = ` + strconv.Itoa(int(ID)))
+						FROM Users
+						WHERE User = ` + username)
 
 	if err != nil {
 		fmt.Println(err)
@@ -36,7 +36,7 @@ func (r *SQLServerRepository) Find(ID int32) (User, error) {
 	for rows.Next() {
 
 		err = rows.Scan(
-			&user.Login,
+			&user.UserName,
 			&user.Password,
 		)
 
@@ -48,7 +48,8 @@ func (r *SQLServerRepository) Find(ID int32) (User, error) {
 	return user, err
 }
 
-func (r *SQLServerRepository) InsertUser(username, password string) (error) {
+//Insert a new User on Database
+func (r *MySQLRepository) Insert(username, password string) error {
 	rows, err := r.DB.Query(`INSERT INTO
 							Users (User, Password)
 							VALUES
@@ -60,16 +61,16 @@ func (r *SQLServerRepository) InsertUser(username, password string) (error) {
 	}
 
 	rows.Close()
-	return  nil
+	return nil
 }
 
-
-func (r *SQLServerRepository) ChangePassword(username, password string) (error) {
+//ChangePassword udpdate the user's password
+func (r *MySQLRepository) ChangePassword(username, password string) error {
 	rows, err := r.DB.Query(`UPDATE
 							Users
 							SET
-							Password = ` + password + 
-							` WHERE
+							Password = ` + password +
+		` WHERE
 							User = ` + username)
 
 	if err != nil {
@@ -77,5 +78,5 @@ func (r *SQLServerRepository) ChangePassword(username, password string) (error) 
 		return err
 	}
 	rows.Close()
-	return  nil
+	return nil
 }
