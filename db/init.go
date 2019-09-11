@@ -1,4 +1,4 @@
-package database
+package db
 
 import (
 	"fmt"
@@ -40,7 +40,7 @@ func createPostsTable(db *sql.DB) error {
 						(ID int NOT NULL AUTO_INCREMENT,
 						Description varchar(200),
 						User varchar(26),
-						Date varchar(20),
+						Date varchar(50),
 						PRIMARY KEY (ID))`)
 	_, err := db.Exec(query)
 	if err != nil {
