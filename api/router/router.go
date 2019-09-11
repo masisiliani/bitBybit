@@ -7,6 +7,7 @@ import (
 	"github.com/masisiliani/bitBybit/pkg/user"
 	"github.com/masisiliani/bitBybit/pkg/post"
 
+	"fmt"
 	"errors"
 	"strconv"
 
@@ -22,6 +23,7 @@ func (r *Router) Login(w http.ResponseWriter, req *http.Request){
 	decoder := json.NewDecoder(req.Body)
 	var parameters types.User
 	err := decoder.Decode(&parameters)
+	fmt.Println(parameters)
 	if err != nil {
 		newError := errors.New("invalid format")
 		r.writeError(w, newError)
@@ -82,7 +84,7 @@ func (r *Router) ChangePassword(w http.ResponseWriter, req *http.Request){
 func (r *Router) NewPost(w http.ResponseWriter, req *http.Request){
 	session := req.Header.Get("Session")
 	u, err := decodeSession(session)
-	
+	fmt.Println("username: ", u.UserName)
 	if err != nil{
 		r.writeError(w, err)
 	}
@@ -97,7 +99,8 @@ func (r *Router) NewPost(w http.ResponseWriter, req *http.Request){
 		r.writeError(w, err)
 	}
 	p.UserName = u.UserName
-
+	fmt.Println(p)
+	fmt.Println(p.UserName)
 	err = r.PostController.InsertPost(p)
 	if err != nil{
 		r.writeError(w, err)
