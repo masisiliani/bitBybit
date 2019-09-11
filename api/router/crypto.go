@@ -8,15 +8,17 @@ import (
 	"errors"
 	"github.com/masisiliani/bitBybit/types"
 	"encoding/json"
-
+	b64 "encoding/base64"
 )
 
 func newSession(username string) string{
-	session := fmt.Sprintf(`{"user": %s}`, username)
+	session := fmt.Sprintf(`{"user": "%s"}`, username)
 	sha1Hash := getHash(session)
 	
 	hashedSession := fmt.Sprintf("%s.%s", session, sha1Hash )
-	return hashedSession
+
+	b64Session := b64.StdEncoding.EncodeToString([]byte(hashedSession))
+	return b64Session
 }
 
 func getHash(content string) string{
@@ -26,15 +28,22 @@ func getHash(content string) string{
 	return sha1Hash
 }
 
-func decodeCookie(cookie string) (types.User, error) {
+func decodeSession(session string) (types.User, error) {
+	dSession, err := b64.StdEncoding.DecodeString(session)
 	u := types.User{}
-	s := strings.Split(cookie, ".")
-	hashedCookie := getHash(s[0])
-	if hashedCookie != s[1]{
-		return u, errors.New("invalid cookie")
+	if err != nil{
+		return u, err
+	}
+	s := strings.Split(string(dSession), ".")
+	if len(s) != 2{
+		return u, errors.New("invalid session")
+	}
+	hashedSession := getHash(s[0])
+	if hashedSession != s[1]{
+		return u, errors.New("invalid session")
 	}
 	
-	err := json.Unmarshal([]byte(s[0]), &u)
+	err = json.Unmarshal([]byte(s[0]), &u)
 	return u, err
 	
 }

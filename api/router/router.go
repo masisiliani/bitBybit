@@ -48,7 +48,6 @@ func (r *Router) Register(w http.ResponseWriter, req *http.Request){
 	}
 
 
-
 	err = r.UserController.Insert(parameters)
 	if err != nil{
 		newError := types.Error{Err: err.Error()}
@@ -60,11 +59,20 @@ func (r *Router) Register(w http.ResponseWriter, req *http.Request){
 }
 
 func (r *Router) ChangePassword(w http.ResponseWriter, req *http.Request){
+	session := req.Header.Get("Session")
+	u, err := decodeSession(session)
+	
+	if err != nil{
+		newError := types.Error{Err: "invalid session"}
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(newError)
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	decoder := json.NewDecoder(req.Body)
-    var parameters types.User
-    err := decoder.Decode(&parameters)
-    if err != nil {
+	err = decoder.Decode(&u)
+	
+	if err != nil {
 		newError := types.Error{Err: "invalid format"}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(newError)
@@ -72,7 +80,7 @@ func (r *Router) ChangePassword(w http.ResponseWriter, req *http.Request){
 
 
 
-	err = r.UserController.ChangePassword(parameters)
+	err = r.UserController.ChangePassword(u)
 	if err != nil{
 		newError := types.Error{Err: err.Error()}
 		w.WriteHeader(http.StatusBadRequest)
