@@ -11,12 +11,12 @@ import (
 
 )
 
-func newCookie(username string) string{
-	cookie := fmt.Sprintf(`{"user": %s}`, username)
-	sha1Hash := getHash(cookie)
+func newSession(username string) string{
+	session := fmt.Sprintf(`{"user": %s}`, username)
+	sha1Hash := getHash(session)
 	
-	hashedCookie := fmt.Sprintf("%s.%s", cookie, sha1Hash )
-	return hashedCookie
+	hashedSession := fmt.Sprintf("%s.%s", session, sha1Hash )
+	return hashedSession
 }
 
 func getHash(content string) string{

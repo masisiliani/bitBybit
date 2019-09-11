@@ -32,7 +32,7 @@ func NewMySQLRepository(db *sql.DB) *MySQLRepository {
 }
 
 //Find a post by id
-func (r *MySQLRepository) FindPostByID(ID int) ([]types.Post, error) {
+func (r *MySQLRepository) FindPostByID(ID int) (types.Post, error) {
 	rows, err := r.DB.Query(`SELECT
 								ID,
 								Description,
@@ -67,7 +67,7 @@ func (r *MySQLRepository) FindPostByID(ID int) ([]types.Post, error) {
 
 	}
 
-	return posts, err
+	return post, err
 }
 
 //FindByUser select all posts by username
@@ -110,7 +110,7 @@ func (r *MySQLRepository) FindPostsByUser(username string) ([]types.Post, error)
 }
 
 //Insert insert a new post
-func (r *MySQLRepository) InsertPost(post *types.Post) error {
+func (r *MySQLRepository) InsertPost(post types.Post) error {
 	result, err := r.DB.Exec(`INSERT INTO
 							Posts (Description, User, Date)
 							VALUES
@@ -149,7 +149,7 @@ func (r *MySQLRepository) DeletePost(ID int) error {
 }
 
 //Update post
-func (r *MySQLRepository) UpdatePost(post *types.Post) error {
+func (r *MySQLRepository) UpdatePost(post types.Post) error {
 	_, err := r.DB.Exec(`UPDATE
 							Posts
 							SET

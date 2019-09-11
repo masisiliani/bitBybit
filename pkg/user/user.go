@@ -27,7 +27,7 @@ func (uc *UserController) Login(u types.User) ( error) {
 //Insert a user
 func (uc *UserController) Insert(u types.User) error {
 	if u.Password != u.PasswordConfirm{
-		return errors.New("passwors don't match")
+		return errors.New("passwords don't match")
 	}
 	if _, err := uc.Repository.FindUser(u.UserName); err != nil{
 		return errors.New("user already exists")
@@ -36,6 +36,9 @@ func (uc *UserController) Insert(u types.User) error {
 }
 
 //ChangePassword update the user's password
-func (uc *UserController) ChangePassword(username, password string) error {
-	return uc.Repository.ChangePassword(username, password)
+func (uc *UserController) ChangePassword(u types.User) error {
+	if u.Password != u.PasswordConfirm{
+		return errors.New("passwords don't match")
+	}
+	return uc.Repository.ChangePassword(u.UserName, u.Password)
 }
