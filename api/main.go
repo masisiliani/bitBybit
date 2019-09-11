@@ -34,12 +34,16 @@ func main(){
 			},
 		},
 	}
-	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/healthcheck", func (w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Working!")
 	})
 	http.HandleFunc("/login", r.Login)
 	http.HandleFunc("/register", r.Register)
 	http.HandleFunc("/changePassword", r.ChangePassword)
+	http.HandleFunc("/post/delete", r.DeletePost)
+	http.HandleFunc("/post/all", r.GetPosts)
+	http.HandleFunc("/post/new", r.NewPost)
+	http.HandleFunc("/post", r.GetPost)
 
 	fmt.Println("Starting server...")
 	if err := http.ListenAndServe("0.0.0.0:3001", nil); err != nil {

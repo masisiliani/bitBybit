@@ -13,7 +13,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_USER: user
-            MYSQL_PASSWORD: DockerSql!
+            MYSQL_PASSWORD: pass
             MYSQL_DATABASE: bitbybit
         depends_on:
             - mysqldb
@@ -31,10 +31,11 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_USER: user
-            MYSQL_PASSWORD: DockerSql!
+            MYSQL_PASSWORD: pass
             MYSQL_DATABASE: bitbybit
         networks:
             - net
+        restart: unless-stopped
 
 networks:
     net:

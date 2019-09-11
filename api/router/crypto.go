@@ -12,7 +12,7 @@ import (
 )
 
 func newSession(username string) string{
-	session := fmt.Sprintf(`{"user": "%s"}`, username)
+	session := fmt.Sprintf(`{"username": "%s"}`, username)
 	sha1Hash := getHash(session)
 	
 	hashedSession := fmt.Sprintf("%s.%s", session, sha1Hash )
@@ -30,6 +30,7 @@ func getHash(content string) string{
 
 func decodeSession(session string) (types.User, error) {
 	dSession, err := b64.StdEncoding.DecodeString(session)
+	fmt.Println(dSession)
 	u := types.User{}
 	if err != nil{
 		return u, err

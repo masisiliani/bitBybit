@@ -1,4 +1,4 @@
-package database
+package db
 
 import (
 	"database/sql"
@@ -38,7 +38,7 @@ func (r *MySQLRepository) FindPostByID(ID int) (types.Post, error) {
 								Description,
 								User,
 								Date
-							FROM Post
+							FROM Posts
 							WHERE ID = ` + strconv.Itoa(ID))
 
 	if err != nil {
@@ -77,17 +77,18 @@ func (r *MySQLRepository) FindPostsByUser(username string) ([]types.Post, error)
 								Description,
 								User,
 								Date
-							FROM Post
+							FROM Posts
 							WHERE User = '` + username + "'")
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	defer rows.Close()
 
 	var posts []types.Post
 	var post types.Post
+
+	if err != nil {
+		fmt.Println(err)
+		return posts, err
+	}
+
+	defer rows.Close()
 
 	for rows.Next() {
 
@@ -106,6 +107,7 @@ func (r *MySQLRepository) FindPostsByUser(username string) ([]types.Post, error)
 
 	}
 
+	fmt.Println(posts)
 	return posts, err
 }
 

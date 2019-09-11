@@ -5,6 +5,7 @@ import (
 	"github.com/masisiliani/bitBybit/types"
 
 	"time"
+	"fmt"
 )
 
 type PostController struct {
@@ -22,8 +23,9 @@ func  (pc *PostController)  GetPosts(username string) ([]types.Post, error){
 }
 
 func  (pc *PostController) InsertPost(p types.Post) (error){
-	date := time.Now().String()
+	date := time.Now().Format("2006-01-02 15:04:05")
 	p.Date = date
+	fmt.Println(p.Date)
 	return pc.Repository.InsertPost(p)
 }
 
