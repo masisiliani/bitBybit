@@ -7,17 +7,20 @@ import (
 	"github.com/masisiliani/bitBybit/pkg/post"
 	"os"
 	"net/http"
+	"fmt"
 )
 
 
 
 func main(){
 	if err := db.InitDatabase(); err != nil{
+		fmt.Println(err)
 		os.Exit(1)
 	}
 
 	database, err := db.Connect_SQL()
 	if err != nil{
+		fmt.Println(err)
 		os.Exit(1)
 	}
 	r := router.Router{
@@ -35,4 +38,10 @@ func main(){
 	http.HandleFunc("/login", r.Login)
 	http.HandleFunc("/register", r.Register)
 	http.HandleFunc("/changePassword", r.ChangePassword)
+
+	fmt.Println("Starting server...")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		fmt.Println(err)
+        os.Exit(1)
+    }
 }

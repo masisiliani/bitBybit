@@ -4,16 +4,16 @@ services:
     api:
         container_name: bitbybit
         build:
-            context: .
-            dockerfile: Dockerfile
+            context: ../
+            dockerfile: deployments/Dockerfile
         ports:
-            - "3000:3000"
+            - "3001:3001"
         networks:
             - net
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_USER: user
-            MYSQL_PASSWORD: pass
+            MYSQL_PASSWORD: DockerSql!
             MYSQL_DATABASE: bitbybit
         depends_on:
             - mysqldb
@@ -31,7 +31,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_USER: user
-            MYSQL_PASSWORD: pass
+            MYSQL_PASSWORD: DockerSql!
             MYSQL_DATABASE: bitbybit
         networks:
             - net
