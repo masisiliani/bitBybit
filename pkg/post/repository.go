@@ -6,6 +6,14 @@ import (
 	"strconv"
 )
 
+type Repository interface {
+	FindPosts(username string) ([]Post, error)
+	FindPost(ID int) (Post, error)
+	InsertPost(username string, description string) (error)
+	DeletePost(ID int) (error)
+	UpdatePost(ID int, description string) (error)
+}
+
 //SQLServerRepository mongodb repo
 type SQLServerRepository struct {
 	DB *sql.DB
