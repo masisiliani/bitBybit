@@ -20,10 +20,10 @@ func NewMySQLRepository(db *sql.DB) *MySQLRepository {
 //Find a user by username
 func (r *MySQLRepository) Find(username string) (User, error) {
 	rows, err := r.DB.Query(`SELECT
-							User,
-							Password
-						FROM Users
-						WHERE User = ` + username)
+								User,
+								Password
+							FROM Users
+							WHERE User = ` + username)
 
 	if err != nil {
 		fmt.Println(err)
@@ -50,7 +50,7 @@ func (r *MySQLRepository) Find(username string) (User, error) {
 
 //Insert a new User on Database
 func (r *MySQLRepository) Insert(username, password string) error {
-	rows, err := r.DB.Query(`INSERT INTO
+	_, err := r.DB.Exec(`INSERT INTO
 							Users (User, Password)
 							VALUES
 							(` + username + "," + password + ")")
@@ -60,13 +60,12 @@ func (r *MySQLRepository) Insert(username, password string) error {
 		return err
 	}
 
-	rows.Close()
 	return nil
 }
 
 //ChangePassword udpdate the user's password
 func (r *MySQLRepository) ChangePassword(username, password string) error {
-	rows, err := r.DB.Query(`UPDATE
+	_, err := r.DB.Exec(`UPDATE
 							Users
 							SET
 							Password = ` + password +
@@ -77,6 +76,6 @@ func (r *MySQLRepository) ChangePassword(username, password string) error {
 		fmt.Println(err)
 		return err
 	}
-	rows.Close()
+
 	return nil
 }

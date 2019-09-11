@@ -16,10 +16,10 @@ func main() {
 		fmt.Println(err)
 	}
 
-	userRepo := user.NewSqlServerRepository(sqlDb.DB)
+	userRepo := user.NewMySQLRepository(sqlDb.DB)
 	userService := user.NewService(userRepo)
 
-	user, err := userService.Find(1)
-	fmt.Printf("Hello %s!", user.Login)
+	user, err := userService.Find("msilva")
+	fmt.Printf("Hello %s!", user.UserName)
 
 }
