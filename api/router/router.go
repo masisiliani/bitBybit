@@ -19,7 +19,6 @@ func NewUser(w http.ResponseWriter, r *http.Request){
     if err != nil {
         panic(err)
     }
-    User
 }
 
 // http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
