@@ -14,19 +14,19 @@ func InitDatabase() error {
 
 	defer db.Close()
 	if err := createPostsTable(db); err != nil {
-		return err
+		fmt.Println(err)
 	}
 	if err := createUsersTable(db); err != nil {
-		return err
+		fmt.Println(err)
 	}
 	return nil
 }
 
 func createUsersTable(db *sql.DB) error {
 	query := fmt.Sprint(`CREATE TABLE Users
-						(Username varchar(26),
+						(User varchar(26),
 						Password varchar(80),
-						PRIMARY KEY (Username))`)
+						PRIMARY KEY (User))`)
 	_, err := db.Exec(query)
 	if err != nil {
 		return err
@@ -39,7 +39,7 @@ func createPostsTable(db *sql.DB) error {
 	query := fmt.Sprint(`CREATE TABLE Posts
 						(ID int NOT NULL AUTO_INCREMENT,
 						Description varchar(200),
-						Username varchar(26),
+						User varchar(26),
 						Date varchar(20),
 						PRIMARY KEY (ID))`)
 	_, err := db.Exec(query)

@@ -78,7 +78,7 @@ func (r *MySQLRepository) FindPostsByUser(username string) ([]types.Post, error)
 								User,
 								Date
 							FROM Post
-							WHERE User = ` + username)
+							WHERE User = '` + username + "'")
 
 	if err != nil {
 		fmt.Println(err)
@@ -114,7 +114,7 @@ func (r *MySQLRepository) InsertPost(post types.Post) error {
 	result, err := r.DB.Exec(`INSERT INTO
 							Posts (Description, User, Date)
 							VALUES
-							(` + post.Description + "," + post.UserName + "," + post.Date + ")")
+							('` + post.Description + "', '" + post.UserName + "', '" + post.Date + "')")
 
 	if err != nil {
 		fmt.Println(err)
@@ -153,8 +153,8 @@ func (r *MySQLRepository) UpdatePost(post types.Post) error {
 	_, err := r.DB.Exec(`UPDATE
 							Posts
 							SET
-							Description = ` + post.Description +
-		` WHERE
+							Description = '` + post.Description +
+							`' WHERE
 							ID = ` + strconv.Itoa(post.ID))
 
 	if err != nil {
@@ -166,19 +166,21 @@ func (r *MySQLRepository) UpdatePost(post types.Post) error {
 
 //Find a user by username
 func (r *MySQLRepository) FindUser(username string) (types.User, error) {
+	fmt.Println(username)
 	rows, err := r.DB.Query(`SELECT
 								User,
 								Password
 							FROM Users
-							WHERE User = ` + username)
+							WHERE User = '` + username + "'")
 
+	user := types.User{}
 	if err != nil {
 		fmt.Println(err)
+		return user, err
 	}
 
-	defer rows.Close()
 
-	var user types.User
+	defer rows.Close()
 
 	for rows.Next() {
 
@@ -200,7 +202,7 @@ func (r *MySQLRepository) InsertUser(u types.User) error {
 	_, err := r.DB.Exec(`INSERT INTO
 							Users (User, Password)
 							VALUES
-							(` + u.UserName + "," + u.Password + ")")
+							('` + u.UserName + "', '" + u.Password + "')")
 
 	if err != nil {
 		fmt.Println(err)
@@ -215,9 +217,9 @@ func (r *MySQLRepository) ChangePassword(username, password string) error {
 	_, err := r.DB.Exec(`UPDATE
 							Users
 							SET
-							Password = ` + password +
-		` WHERE
-							User = ` + username)
+							Password = '` + password +
+							`' WHERE
+							User = '` + username + "'")
 
 	if err != nil {
 		fmt.Println(err)
