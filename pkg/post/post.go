@@ -3,6 +3,8 @@ package post
 import (
 	db "github.com/masisiliani/bitBybit/db"
 	"github.com/masisiliani/bitBybit/types"
+
+	"time"
 )
 
 type PostController struct {
@@ -20,6 +22,8 @@ func  (pc *PostController)  GetPosts(username string) ([]types.Post, error){
 }
 
 func  (pc *PostController) InsertPost(p types.Post) (error){
+	date := time.Now().String()
+	p.Date = date
 	return pc.Repository.InsertPost(p)
 }
 
