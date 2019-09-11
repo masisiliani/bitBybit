@@ -15,7 +15,6 @@ import (
 func main(){
 	if err := db.InitDatabase(); err != nil{
 		fmt.Println(err)
-		os.Exit(1)
 	}
 
 	database, err := db.Connect_SQL()
@@ -35,12 +34,15 @@ func main(){
 			},
 		},
 	}
+	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "Working!")
+	})
 	http.HandleFunc("/login", r.Login)
 	http.HandleFunc("/register", r.Register)
 	http.HandleFunc("/changePassword", r.ChangePassword)
 
 	fmt.Println("Starting server...")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe("0.0.0.0:3001", nil); err != nil {
 		fmt.Println(err)
         os.Exit(1)
     }
