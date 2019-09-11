@@ -3,11 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
-
-	_ "github.com/denisenkom/go-mssqldb"
 )
-
-var DB *sql.DB
 
 const (
 	SQLHost     = "172.17.223.65"
@@ -18,7 +14,7 @@ const (
 )
 
 //Connect: Inicializa a conexão com a base de dados e retorna uma struct do tipo DB, que tem os valores para manipulação do banco de dados
-func Connect_SQL() error {
+func Connect_SQL() (*sql.DB, error) {
 
 	var (
 		dataSourceName = fmt.Sprintf("server=%s;port=%s;user id=%s;password=%s;database=%s",
@@ -28,15 +24,13 @@ func Connect_SQL() error {
 	db, err := sql.Open("mssql", dataSourceName)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	DB = db
-
-	return nil
+	return db, nil
 }
